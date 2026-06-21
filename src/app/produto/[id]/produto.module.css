@@ -1,0 +1,125 @@
+.container {
+  padding-bottom: 100px; /* space for the fixed bottom bar */
+  background-color: var(--color-background);
+  min-height: 100vh;
+}
+
+.header {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+}
+
+.backButton {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.imageContainer {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  background-color: var(--color-border);
+}
+
+.productImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  padding: 24px 20px;
+  background-color: var(--color-surface);
+  border-radius: 24px 24px 0 0;
+  margin-top: -24px;
+  position: relative;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+}
+
+.categoryBadge {
+  background-color: var(--color-background-alt);
+  color: var(--color-primary);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 24px;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.price {
+  font-size: 22px;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--color-text-main);
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-text-main);
+  line-height: 1.4;
+}
+
+.checkIcon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 16px 20px 24px;
+  box-shadow: 0 -4px 24px rgba(128, 0, 32, 0.05);
+  z-index: 50;
+}
