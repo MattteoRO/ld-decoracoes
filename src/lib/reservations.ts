@@ -72,6 +72,7 @@ export async function upsertKit(kit: {
   name: string;
   description?: string;
   price?: number | null;
+  image?: string | null;
   active: boolean;
   kit_items: Array<{ category_needed?: string | null; specific_sku?: string | null; quantity: number }>;
 }): Promise<string> {

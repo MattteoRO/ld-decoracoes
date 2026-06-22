@@ -14,10 +14,10 @@ const ITEM_CATEGORIES = [
 type Tab = "items" | "kits";
 type ItemForm = { id?: string; sku: string; name: string; category: string; is_available: boolean };
 type KitItemRow = { category_needed: string | null; specific_sku: string | null; quantity: number };
-type KitForm = { id?: string; name: string; description: string; price: string; active: boolean; kit_items: KitItemRow[] };
+type KitForm = { id?: string; name: string; description: string; image: string; price: string; active: boolean; kit_items: KitItemRow[] };
 
 const emptyItem = (): ItemForm => ({ sku: "", name: "", category: ITEM_CATEGORIES[0], is_available: true });
-const emptyKit = (): KitForm => ({ name: "", description: "", price: "", active: true, kit_items: [] });
+const emptyKit = (): KitForm => ({ name: "", description: "", image: "", price: "", active: true, kit_items: [] });
 
 interface Props {
   initialItems: DbItem[];
@@ -220,10 +220,16 @@ export default function InventoryClient({ initialItems, initialKits }: Props) {
                     <div style={{ flex: 1 }}>
                       <p style={{ fontSize: 14, fontWeight: 700, color: "#3d1f2e" }}>{kit.name}</p>
                       {kit.description && <p style={{ fontSize: 12, color: "#5a3547", marginTop: 2 }}>{kit.description}</p>}
-                      <p style={{ fontSize: 11, color: "#9e6a7e", marginTop: 4 }}>{kit.kit_items?.length ?? 0} componentes</p>
+                      <div style={{ display: "flex", gap: 10, marginTop: 4, alignItems: "center" }}>
+                        {kit.price && kit.price > 0
+                          ? <p style={{ fontSize: 13, fontWeight: 700, color: "#8B2252" }}>R$ {kit.price.toFixed(2).replace(".", ",")}</p>
+                          : <p style={{ fontSize: 12, color: "#b592a1", fontStyle: "italic" }}>Sem preço</p>
+                        }
+                        <p style={{ fontSize: 11, color: "#9e6a7e" }}>· {kit.kit_items?.length ?? 0} componentes</p>
+                      </div>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => { setKitForm({ id: kit.id, name: kit.name, description: kit.description ?? "", price: kit.price ? String(kit.price) : "", active: kit.active, kit_items: (kit.kit_items ?? []).map(ki => ({ category_needed: ki.category_needed, specific_sku: ki.specific_sku, quantity: ki.quantity })) }); setShowKitForm(true); }} style={{ width: 34, height: 34, borderRadius: 8, border: "1px solid #f0d0de", backgroundColor: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#8B2252" }}>
+                      <button onClick={() => { setKitForm({ id: kit.id, name: kit.name, description: kit.description ?? "", image: kit.image ?? "", price: kit.price ? String(kit.price) : "", active: kit.active, kit_items: (kit.kit_items ?? []).map(ki => ({ category_needed: ki.category_needed, specific_sku: ki.specific_sku, quantity: ki.quantity })) }); setShowKitForm(true); }} style={{ width: 34, height: 34, borderRadius: 8, border: "1px solid #f0d0de", backgroundColor: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#8B2252" }}>
                         <Pencil size={15} />
                       </button>
                       <button onClick={() => handleDeleteKit(kit.id)} disabled={deletingId === kit.id} style={{ width: 34, height: 34, borderRadius: 8, border: "1px solid #ffc9c9", backgroundColor: "#fff0f0", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#c92a2a" }}>
@@ -295,7 +301,16 @@ export default function InventoryClient({ initialItems, initialKits }: Props) {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <Field label="Nome do Kit *"><input value={kitForm.name} onChange={e => setKitForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Kit Masha e o Urso" style={inputStyle} /></Field>
-              <Field label="Descrição"><textarea value={kitForm.description} onChange={e => setKitForm(f => ({ ...f, description: e.target.value }))} rows={2} style={{ ...inputStyle, resize: "vertical" }} /></Field>
+              <Field label="Descrição">
+                <textarea value={kitForm.description} onChange={e => setKitForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="O que está incluso no kit..." style={{ ...inputStyle, resize: "vertical" }} />
+              </Field>
+              <Field label="Imagem (URL ou /produtos/nome-do-arquivo.jpeg)">
+                <input value={kitForm.image} onChange={e => setKitForm(f => ({ ...f, image: e.target.value }))} placeholder="Ex: /produtos/natural-boho.jpeg" style={inputStyle} />
+                {kitForm.image && (
+                  <img src={kitForm.image} alt="preview" style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 8, marginTop: 6 }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                )}
+              </Field>
               <Field label="Preço (R$)"><input type="number" min="0" step="0.01" value={kitForm.price} onChange={e => setKitForm(f => ({ ...f, price: e.target.value }))} placeholder="0.00" style={inputStyle} /></Field>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", backgroundColor: "#FFF5F7", borderRadius: 10, border: "1px solid #f0d0de" }}>
                 <span style={{ fontSize: 14, fontWeight: 600, color: "#5a3547" }}>Kit ativo</span>

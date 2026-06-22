@@ -61,6 +61,7 @@ export type DbKit = {
   name: string;
   description: string | null;
   price: number | null;
+  image: string | null;
   active: boolean;
   created_at: string;
   kit_items?: DbKitItem[];

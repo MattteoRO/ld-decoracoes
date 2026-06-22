@@ -9,32 +9,6 @@ import { useState } from "react";
 
 const WHATSAPP_NUMBER = "5569992693194";
 
-const KIT_IMAGES: Record<string, string> = {
-  "Kit Princesas Disney":  "/produtos/15-anos-classica-roxo-prata.jpeg",
-  "Kit Patrulha Canina":   "/produtos/aniversario-tropical-colorida.png",
-  "Kit Masha e o Urso":    "/produtos/natural-boho.jpeg",
-  "Kit Boteco":            "/produtos/earthly-gold.jpeg",
-  "Kit Stitch":            "/produtos/deep-blue-gold.jpeg",
-  "Kit Minnie Mouse":      "/produtos/classic-pink-cristal.png",
-  "Kit Debutante":         "/produtos/soft-rose-gold.jpeg",
-  "Kit Carros":            "/produtos/fortune-tiger.jpeg",
-  "Kit Dragon Ball Z":     "/produtos/sonic-luxo-azul-dourado.jpeg",
-  "Kit Astronauta":        "/produtos/vibrant-purple.png",
-};
-
-const KIT_DESCRIPTIONS: Record<string, string> = {
-  "Kit Princesas Disney":  "Painel sublimado + cilindros decorados + capas, vasos e bandejas temáticas.",
-  "Kit Patrulha Canina":   "Painel sublimado + cilindros decorados + capas e acessórios Patrulha Canina Rosa.",
-  "Kit Masha e o Urso":    "Painel sublimado + cilindros + cerca, vasos e suportes da Masha.",
-  "Kit Boteco":            "Painel sublimado + cilindros + capas de chopp/tijolinho, vasos e bandejas.",
-  "Kit Stitch":            "Painel sublimado + cilindros + capas, vasos rosas e suportes roxos.",
-  "Kit Minnie Mouse":      "Painel sublimado + cilindros + capas poá, vasos e bandejas da Minnie.",
-  "Kit Debutante":         "Painel sublimado + cilindros + capa redonda e arranjos florais.",
-  "Kit Carros":            "Painel sublimado + cilindros + capas pista/pneu e suportes temáticos.",
-  "Kit Dragon Ball Z":     "Painel sublimado + cilindros + capas e suportes Dragon Ball Z.",
-  "Kit Astronauta":        "Painel sublimado + cilindros + capas e suportes coloridos de astronauta.",
-};
-
 export default function BuilderClient({ kits }: { kits: DbKit[] }) {
   const router = useRouter();
   const [expandedKit, setExpandedKit] = useState<string | null>(null);
@@ -116,8 +90,8 @@ export default function BuilderClient({ kits }: { kits: DbKit[] }) {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {kits.map(kit => {
-              const image = KIT_IMAGES[kit.name];
-              const description = kit.description ?? KIT_DESCRIPTIONS[kit.name] ?? "";
+              const image = kit.image;
+              const description = kit.description ?? "";
               const isExpanded = expandedKit === kit.id;
 
               return (
