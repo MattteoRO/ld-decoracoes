@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, ShoppingCart, Check, Calendar, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShoppingCart, Check, Star } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import type { Product } from "@/data/products";
+import AvailabilityChecker from "@/components/AvailabilityChecker";
 
 export default function ProductDetailClient({ product }: { product: Product }) {
   const router = useRouter();
@@ -37,14 +38,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <p style={{ color: "var(--color-text-muted)", fontSize: 14, lineHeight: 1.6 }}>{product.description}</p>
           </div>
 
-          <div style={{ marginBottom: 24, padding: 16, backgroundColor: "var(--color-background-alt)", borderRadius: 14, border: "1px dashed var(--color-primary-light)" }}>
-            <h2 style={{ fontSize: 15, fontWeight: 600, color: "var(--color-primary)", display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <Calendar size={18} /> Verificar Disponibilidade
-            </h2>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input type="date" style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid var(--color-border)", fontSize: 14, fontFamily: "inherit" }} />
-              <button style={{ backgroundColor: "var(--color-primary)", color: "white", border: "none", borderRadius: 8, padding: "0 16px", fontWeight: 600, cursor: "pointer" }}>Checar</button>
-            </div>
+          <div style={{ marginBottom: 24 }}>
+            <AvailabilityChecker productId={product.id} />
           </div>
 
           {product.includes.length > 0 && (

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Trash2, LogOut, Package, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, X, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, LogOut, Package, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, X, Check, Boxes, CalendarCheck } from "lucide-react";
 import type { DbProduct } from "@/lib/supabase";
 
 const CATEGORIES = ["Locação", "Kit Festa", "Kit Premium", "Balões", "Pegue e Monte", "Temas Personalizados", "Monte Sua Festa"];
@@ -174,6 +174,16 @@ export default function AdminDashboardClient({ initialProducts }: { initialProdu
       </header>
 
       <div style={{ padding: "20px 16px", maxWidth: 640, margin: "0 auto" }}>
+        {/* Quick nav */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+          <button onClick={() => router.push("/admin/inventory")} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            <Boxes size={16} /> Acervo & Kits
+          </button>
+          <button onClick={() => router.push("/admin/reservations")} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            <CalendarCheck size={16} /> Reservas
+          </button>
+        </div>
+
         {/* Add button */}
         <button
           onClick={openCreate}
