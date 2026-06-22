@@ -6,7 +6,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { cart, dataFesta, dataMontagem, cartTotal, type } = body;
+    const { cart, dataFesta, dataMontagem, cartTotal, nomeCliente, cpfCliente, type } = body;
 
     const discount = cartTotal * 0.05;
     const total = cartTotal - discount;
@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
     const title = type === "orcamento" ? "NOVO ORÇAMENTO" : "NOVA RESERVA";
 
     let msg = `${emoji} *${title} - LD Decorações*\n\n`;
+    if (nomeCliente) msg += `👤 *Nome:* ${nomeCliente}\n`;
+    if (cpfCliente) msg += `🪪 *CPF:* ${cpfCliente}\n`;
     msg += `📅 *Data da Festa:* ${fmtDate(dataFesta)}\n`;
     msg += `🛠️ *Data da Montagem:* ${fmtDate(dataMontagem)}\n\n`;
     msg += `*ITENS SELECIONADOS:*\n`;
