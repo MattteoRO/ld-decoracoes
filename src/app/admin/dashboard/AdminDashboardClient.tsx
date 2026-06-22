@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Trash2, LogOut, Package, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, X, Check, Boxes, CalendarCheck } from "lucide-react";
+import { Plus, Pencil, Trash2, LogOut, Package, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, X, Check, Boxes, CalendarCheck, FileText } from "lucide-react";
 import type { DbProduct } from "@/lib/supabase";
+import ImageUploader from "@/components/ImageUploader";
+import SortableIncludes from "@/components/SortableIncludes";
 
 const CATEGORIES = ["Locação", "Kit Festa", "Kit Premium", "Balões", "Pegue e Monte", "Temas Personalizados", "Monte Sua Festa"];
 
@@ -129,22 +131,6 @@ export default function AdminDashboardClient({ initialProducts }: { initialProdu
     }
   }
 
-  function addInclude() {
-    setForm(f => ({ ...f, includes: [...f.includes, ""] }));
-  }
-
-  function updateInclude(i: number, val: string) {
-    setForm(f => {
-      const arr = [...f.includes];
-      arr[i] = val;
-      return { ...f, includes: arr };
-    });
-  }
-
-  function removeInclude(i: number) {
-    setForm(f => ({ ...f, includes: f.includes.filter((_, idx) => idx !== i) }));
-  }
-
   const fmt = (v: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
   return (
@@ -175,11 +161,14 @@ export default function AdminDashboardClient({ initialProducts }: { initialProdu
 
       <div style={{ padding: "20px 16px", maxWidth: 640, margin: "0 auto" }}>
         {/* Quick nav */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-          <button onClick={() => router.push("/admin/inventory")} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+          <button onClick={() => router.push("/admin/orcamentos")} style={{ flex: 1, minWidth: 120, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            <FileText size={16} /> Orçamentos
+          </button>
+          <button onClick={() => router.push("/admin/inventory")} style={{ flex: 1, minWidth: 120, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
             <Boxes size={16} /> Acervo & Kits
           </button>
-          <button onClick={() => router.push("/admin/reservations")} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+          <button onClick={() => router.push("/admin/reservations")} style={{ flex: 1, minWidth: 120, padding: "10px", borderRadius: 10, border: "1px solid #f0d0de", backgroundColor: "#fff", color: "#8B2252", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
             <CalendarCheck size={16} /> Reservas
           </button>
         </div>
@@ -343,12 +332,11 @@ export default function AdminDashboardClient({ initialProducts }: { initialProdu
               </Field>
 
               {/* Image */}
-              <Field label="URL da imagem">
-                <input value={form.image} onChange={e => setForm(f => ({ ...f, image: e.target.value }))} placeholder="https://..." style={inputStyle} />
-                {form.image && (
-                  <img src={form.image} alt="preview" style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 8, marginTop: 6 }}
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                )}
+              <Field label="Imagem">
+                <ImageUploader
+                  value={form.image}
+                  onChange={url => setForm(f => ({ ...f, image: url }))}
+                />
               </Field>
 
               {/* Description */}
@@ -367,35 +355,12 @@ export default function AdminDashboardClient({ initialProducts }: { initialProdu
               {/* Includes / Subprodutos */}
               <div>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#5a3547", marginBottom: 8 }}>
-                  Subprodutos inclusos
+                  Subprodutos inclusos <span style={{ fontWeight: 400, color: "#9e6a7e" }}>(arraste para reordenar)</span>
                 </label>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {form.includes.map((inc, i) => (
-                    <div key={i} style={{ display: "flex", gap: 8 }}>
-                      <input
-                        value={inc}
-                        onChange={e => updateInclude(i, e.target.value)}
-                        placeholder={`Subproduto ${i + 1}`}
-                        style={{ ...inputStyle, flex: 1 }}
-                      />
-                      <button type="button" onClick={() => removeInclude(i)} style={{
-                        width: 36, height: 44, borderRadius: 8, border: "1px solid #ffc9c9",
-                        backgroundColor: "#fff0f0", cursor: "pointer", display: "flex",
-                        alignItems: "center", justifyContent: "center", color: "#c92a2a", flexShrink: 0,
-                      }}>
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <button type="button" onClick={addInclude} style={{
-                  marginTop: 8, padding: "8px 14px", borderRadius: 8,
-                  border: "1px dashed #C5668E", backgroundColor: "#FFF5F7",
-                  color: "#8B2252", fontSize: 13, fontWeight: 600, cursor: "pointer",
-                  display: "flex", alignItems: "center", gap: 6,
-                }}>
-                  <Plus size={14} /> Adicionar subproduto
-                </button>
+                <SortableIncludes
+                  items={form.includes}
+                  onChange={includes => setForm(f => ({ ...f, includes }))}
+                />
               </div>
 
               {/* Save */}

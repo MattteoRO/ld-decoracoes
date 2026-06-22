@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Pencil, Trash2, ArrowLeft, Package, Boxes, ToggleLeft, ToggleRight, X } from "lucide-react";
 import type { DbItem, DbKit } from "@/lib/supabase";
+import ImageUploader from "@/components/ImageUploader";
 
 const ITEM_CATEGORIES = [
   "Moveis", "EST-PNL-150", "EST-CIL-JOG", "EST-PNL-MAD-120",
@@ -304,12 +305,11 @@ export default function InventoryClient({ initialItems, initialKits }: Props) {
               <Field label="Descrição">
                 <textarea value={kitForm.description} onChange={e => setKitForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="O que está incluso no kit..." style={{ ...inputStyle, resize: "vertical" }} />
               </Field>
-              <Field label="Imagem (URL ou /produtos/nome-do-arquivo.jpeg)">
-                <input value={kitForm.image} onChange={e => setKitForm(f => ({ ...f, image: e.target.value }))} placeholder="Ex: /produtos/natural-boho.jpeg" style={inputStyle} />
-                {kitForm.image && (
-                  <img src={kitForm.image} alt="preview" style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 8, marginTop: 6 }}
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                )}
+              <Field label="Imagem do Kit">
+                <ImageUploader
+                  value={kitForm.image}
+                  onChange={url => setKitForm(f => ({ ...f, image: url }))}
+                />
               </Field>
               <Field label="Preço (R$)"><input type="number" min="0" step="0.01" value={kitForm.price} onChange={e => setKitForm(f => ({ ...f, price: e.target.value }))} placeholder="0.00" style={inputStyle} /></Field>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", backgroundColor: "#FFF5F7", borderRadius: 10, border: "1px solid #f0d0de" }}>
