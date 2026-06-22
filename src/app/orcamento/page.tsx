@@ -21,15 +21,21 @@ export default function OrcamentoPage() {
   const discount = cartTotal * 0.05;
   const totalWithDiscount = cartTotal - discount;
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
     if (cart.length === 0) return;
 
     if (!dataFesta || !dataMontagem) {
       setShowError(true);
-      // Scroll to top or to the error message could be added here
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
+    // Notify via Telegram (fire and forget)
+    fetch("/api/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cart, dataFesta, dataMontagem, cartTotal, type: "orcamento" }),
+    }).catch(() => {});
 
     let message = "🎀 *ORÇAMENTO - LD DECORAÇÕES* 🎀\n\n";
     message += "Olá! Gostaria de solicitar o seguinte orçamento:\n\n";
