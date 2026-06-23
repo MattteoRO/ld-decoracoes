@@ -102,7 +102,14 @@ export default function ReservationsClient({ initialReservations }: Props) {
         {filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "48px 20px", color: "#b592a1" }}>
             <CalendarCheck size={48} strokeWidth={1} style={{ marginBottom: 12, color: "#d4a0b5" }} />
-            <p>Nenhuma reserva encontrada.</p>
+            <p style={{ fontWeight: 600, marginBottom: 8 }}>Nenhuma reserva encontrada.</p>
+            <p style={{ fontSize: 13, lineHeight: 1.6 }}>
+              Reservas são criadas quando um kit do <strong>Pegue e Monte</strong> é confirmado com data e horário.<br />
+              Os <strong>orçamentos</strong> enviados pelo WhatsApp aparecem em{" "}
+              <button onClick={() => router.push("/admin/orcamentos")} style={{ background: "none", border: "none", color: "#8B2252", fontWeight: 700, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>
+                Orçamentos
+              </button>.
+            </p>
           </div>
         )}
 

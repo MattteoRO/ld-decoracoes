@@ -54,6 +54,36 @@ export async function POST(req: NextRequest) {
     msg += `*💰 TOTAL: ${fmt(total)}*`;
 
     // ── Send to Telegram ────────────────────────────────────
+    // Use HTML parse mode to avoid Markdown special character issues
+    const tgMsg = msg
+      .replace(/\*/g, "<b>").replace(/\*([^*]+)\*/g, "<b>$1</b>") // not perfect but we'll use HTML mode
+    ;
+
+    // Build HTML version for better reliability
+    let htmlMsg = `${emoji} <b>${title} - LD Decorações</b>\n\n`;
+    if (nomeCliente) htmlMsg += `👤 <b>Nome:</b> ${nomeCliente}\n`;
+    if (cpfCliente)  htmlMsg += `🪪 <b>CPF:</b> ${cpfCliente}\n`;
+    if (telefoneCliente) htmlMsg += `📱 <b>Tel:</b> ${telefoneCliente}\n`;
+    htmlMsg += `📅 <b>Data da Festa:</b> ${fmtDate(dataFesta)}${horaFesta ? ` às ${horaFesta}` : ""}\n`;
+    htmlMsg += `🛠️ <b>Montagem:</b> ${fmtDate(dataMontagem)}\n`;
+    if (localFesta?.address) htmlMsg += `📍 <b>Local:</b> ${localFesta.address}\n`;
+    if (localFesta?.lat && localFesta?.lng) {
+      htmlMsg += `🗺️ <a href="https://maps.google.com/?q=${localFesta.lat},${localFesta.lng}">Ver no Google Maps</a>\n`;
+    }
+    htmlMsg += `\n<b>ITENS:</b>\n`;
+    for (const [i, item] of (cart as Array<{ product: { title: string; price: number }; quantity: number; selectedIncludes?: string[]; customNotes?: string }>).entries()) {
+      htmlMsg += `\n<b>${i + 1}. ${item.product.title}</b>\n`;
+      htmlMsg += `   ${item.quantity}x | ${fmt(item.product.price * item.quantity)}\n`;
+      if (item.selectedIncludes?.length) htmlMsg += `   ✓ ${item.selectedIncludes.join(", ")}\n`;
+      if (item.customNotes) htmlMsg += `   📝 ${item.customNotes}\n`;
+    }
+    htmlMsg += `\n━━━━━━━━━━━━━━━\n`;
+    htmlMsg += `Subtotal: ${fmt(cartTotal)}\n`;
+    htmlMsg += `Desconto Pix (5%): -${fmt(discount)}\n`;
+    htmlMsg += `<b>💰 TOTAL: ${fmt(total)}</b>`;
+
+    void tgMsg; // suppress unused warning
+
     const tgRes = await fetch(
       `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
       {
@@ -61,8 +91,8 @@ export async function POST(req: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: TELEGRAM_CHAT_ID,
-          text: msg,
-          parse_mode: "Markdown",
+          text: htmlMsg,
+          parse_mode: "HTML",
         }),
       }
     );

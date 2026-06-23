@@ -62,7 +62,8 @@ function CatalogContent({ products }: { products: Product[] }) {
 
       <div style={{ padding: "16px", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16 }}>
         {filteredProducts.length > 0 ? filteredProducts.map(product => (
-          <div key={product.id} onClick={() => { if (!isInCart(product.id)) addToCart(product); router.push("/orcamento"); }}
+          <div key={product.id}
+            onClick={() => router.push(`/produto/${product.id}`)}
             style={{ backgroundColor: "#fff", borderRadius: 14, overflow: "hidden", border: "1px solid var(--color-border)", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", position: "relative", cursor: "pointer" }}
           >
             <img src={product.image} alt={product.title} style={{ width: "100%", aspectRatio: "1", objectFit: "cover" }} />

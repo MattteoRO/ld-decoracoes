@@ -49,6 +49,7 @@ export default function OrcamentoPage() {
   const [localFesta, setLocalFesta] = useState<LocationData | null>(null);
   const [showError, setShowError] = useState(false);
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const discount = cartTotal * 0.05;
   const totalWithDiscount = cartTotal - discount;
@@ -141,6 +142,7 @@ export default function OrcamentoPage() {
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
     setSending(false);
+    setSent(true);
   };
 
   const handleDownloadPDF = async () => {
@@ -188,7 +190,42 @@ export default function OrcamentoPage() {
         <div className="orcamento-layout" id="orcamento-content" style={{ padding: "16px 0" }}>
           <div className="orcamento-left">
 
-            {/* Erro geral */}
+            {/* Banner de confirmação pós-envio */}
+      {sent && (
+        <div style={{ margin: "16px 16px 0", padding: "16px 20px", backgroundColor: "#d3f9d8", borderRadius: 14, border: "1px solid #8ce99a" }}>
+          <p style={{ fontSize: 15, fontWeight: 700, color: "#1b5e20", marginBottom: 6 }}>✅ Solicitação enviada!</p>
+          <p style={{ fontSize: 13, color: "#2b5e20", lineHeight: 1.6 }}>
+            Seu orçamento foi enviado pelo WhatsApp e registrado no nosso sistema.
+            <br /><strong>Aguarde nosso retorno em até 24h para confirmação e fechamento.</strong>
+          </p>
+          <p style={{ fontSize: 12, color: "#2b8a3e", marginTop: 8 }}>
+            💡 O pagamento é feito somente após a confirmação do serviço — não é necessário pagar agora.
+          </p>
+        </div>
+      )}
+
+      {/* Indicador de progresso */}
+      <div style={{ margin: "16px 16px 0", padding: "12px 16px", backgroundColor: "#fff", borderRadius: 12, border: "1px solid var(--color-border)" }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-muted)", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Como funciona</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
+          {[
+            { step: "1", label: "Orçamento", done: cart.length > 0 },
+            { step: "2", label: "WhatsApp", done: sent },
+            { step: "3", label: "Confirmação", done: false },
+            { step: "4", label: "Pagamento", done: false },
+          ].map((s, i, arr) => (
+            <div key={s.step} style={{ display: "flex", alignItems: "center", flex: i < arr.length - 1 ? 1 : "none" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, backgroundColor: s.done ? "#8B2252" : "#f0d0de", color: s.done ? "#fff" : "#9e6a7e" }}>
+                  {s.done ? "✓" : s.step}
+                </div>
+                <span style={{ fontSize: 10, color: s.done ? "#8B2252" : "#9e6a7e", fontWeight: s.done ? 700 : 400, whiteSpace: "nowrap" }}>{s.label}</span>
+              </div>
+              {i < arr.length - 1 && <div style={{ flex: 1, height: 2, backgroundColor: s.done ? "#8B2252" : "#f0d0de", margin: "0 4px", marginBottom: 16 }} />}
+            </div>
+          ))}
+        </div>
+      </div>
             {showError && !isFormValid() && (
               <div style={{ margin: "0 0 16px", padding: "12px 16px", backgroundColor: "#fff0f6", color: "#c92a2a", borderRadius: 10, fontSize: 13, border: "1px solid #ffc9c9" }}>
                 ⚠️ Preencha todos os campos obrigatórios (*) corretamente antes de continuar.

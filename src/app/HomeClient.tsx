@@ -77,7 +77,7 @@ export default function HomeClient({ products }: { products: Product[] }) {
             key={product.id}
             className={styles.productCard}
             style={{ cursor: "pointer" }}
-            onClick={() => { if (!isInCart(product.id)) addToCart(product); router.push("/orcamento"); }}
+            onClick={() => router.push(`/produto/${product.id}`)}
           >
             <img src={product.image} alt={product.title} className={styles.productImage} />
             <div className={styles.productInfo}>

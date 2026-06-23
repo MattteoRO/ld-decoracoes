@@ -9,6 +9,35 @@ import { useState } from "react";
 
 const WHATSAPP_NUMBER = "5569992693194";
 
+// Fallback images while admin hasn't set kit images yet
+const KIT_IMAGE_FALLBACK: Record<string, string> = {
+  "Kit Princesas Disney":  "/produtos/15-anos-classica-roxo-prata.jpeg",
+  "Kit Patrulha Canina":   "/produtos/aniversario-tropical-colorida.png",
+  "Kit Masha e o Urso":    "/produtos/natural-boho.jpeg",
+  "Kit Boteco":            "/produtos/earthly-gold.jpeg",
+  "Kit Stitch":            "/produtos/deep-blue-gold.jpeg",
+  "Kit Minnie Mouse":      "/produtos/classic-pink-cristal.png",
+  "Kit Debutante":         "/produtos/soft-rose-gold.jpeg",
+  "Kit Carros":            "/produtos/fortune-tiger.jpeg",
+  "Kit Dragon Ball Z":     "/produtos/sonic-luxo-azul-dourado.jpeg",
+  "Kit Astronauta":        "/produtos/vibrant-purple.png",
+};
+
+const SKU_LABELS: Record<string, string> = {
+  "EST-PNL-150":  "1 Painel redondo 1,50m",
+  "EST-CIL-JOG":  "1 Jogo de cilindros",
+  "TEMA-DISN-01": "Box temático Princesas Disney",
+  "TEMA-PATR-01": "Box temático Patrulha Canina",
+  "TEMA-MASH-01": "Box temático Masha e o Urso",
+  "TEMA-BOTE-01": "Box temático Boteco",
+  "TEMA-STIT-01": "Box temático Stitch",
+  "TEMA-MINN-01": "Box temático Minnie Mouse",
+  "TEMA-DEBU-01": "Box temático Debutante",
+  "TEMA-CARR-01": "Box temático Carros",
+  "TEMA-DRAG-01": "Box temático Dragon Ball Z",
+  "TEMA-ASTR-01": "Box temático Astronauta",
+};
+
 export default function BuilderClient({ kits }: { kits: DbKit[] }) {
   const router = useRouter();
   const [expandedKit, setExpandedKit] = useState<string | null>(null);
@@ -90,7 +119,7 @@ export default function BuilderClient({ kits }: { kits: DbKit[] }) {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {kits.map(kit => {
-              const image = kit.image;
+              const image = kit.image || KIT_IMAGE_FALLBACK[kit.name] || null;
               const description = kit.description ?? "";
               const isExpanded = expandedKit === kit.id;
 
@@ -115,7 +144,7 @@ export default function BuilderClient({ kits }: { kits: DbKit[] }) {
                           {kit.kit_items.map((ki, i) => (
                             <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--color-text-main)" }}>
                               <CheckCircle2 size={12} color="var(--color-primary)" strokeWidth={2.5} />
-                              {ki.specific_sku ?? ki.category_needed}
+                              {SKU_LABELS[ki.specific_sku ?? ki.category_needed ?? ""] ?? (ki.specific_sku ?? ki.category_needed)}
                             </div>
                           ))}
                         </div>
